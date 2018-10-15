@@ -43,3 +43,5 @@
 >>![image](https://github.com/maliangnansheng/BBS_SSM/blob/master/picture/%E7%AE%A1%E7%90%86%E5%91%98-%E5%B8%96%E5%AD%90%E7%AE%A1%E7%90%86.png)
 >>#### 4，版块管理
 >>![image](https://github.com/maliangnansheng/BBS_SSM/blob/master/picture/%E7%AE%A1%E7%90%86%E5%91%98-%E7%89%88%E5%9D%97%E7%AE%A1%E7%90%86.png)
+
+测试数据
