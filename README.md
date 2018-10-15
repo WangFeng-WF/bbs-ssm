@@ -15,7 +15,7 @@
 ### 技术栈
 **spring** 、**springmvc** 、**mybatis** 、**mysql** 、**ajax** 、**jquery** 、**bootstrap**
 ### 我的环境
-**jdk1.8** 、**tomcat9** 、**mysql6.3** 、**maven3.5.4** 、**eclipse4.7.1a**
+**jdk1.8** 、**tomcat9** 、**mysql6.3** 、**maven3.5.4** 、**IntelliJ IDEA 2018.2.4 x64**
 ### 静态展示：
 >### 用户系统
 >>#### 1，登录
