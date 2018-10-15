@@ -1,7 +1,5 @@
 package com.liang.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -406,7 +404,19 @@ public class UserController {
 	 * @throws IOException 
 	 */
 	@RequestMapping("/deleteUser")
-	public String deleteUser(User user,Map<Object, Object> map,HttpSession session) throws IOException {
+	public String deleteUser(User user,Map<Object, Object> map,HttpSession session,HttpServletRequest request) throws IOException {
+		
+		String projectname;	//项目名称
+		projectname = request.getSession().getServletContext().getRealPath("/");
+		projectname=projectname.substring(0,projectname.length()-1);
+		if (projectname.indexOf("/")==-1) {//在非linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("\\"),projectname.length());
+		} else {//在linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("/"),projectname.length());
+		}
+
+		//文件（图片）路径
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
 		
 		int userid=user.getUserid();
 		
@@ -421,7 +431,7 @@ public class UserController {
 			String fileName = viaService.getVia(userid).getPhoto();
 			System.out.println("文件名："+fileName);
 			// 封装上传文件位置的全路径
-			File targetFile = new File(PathUtil.getUserPath(), fileName);
+			File targetFile = new File(filePath, fileName);
 			System.out.println("拼接全文件名："+targetFile);
 			
 			//删除用户对应的头像（实际删除）
@@ -442,7 +452,7 @@ public class UserController {
 			for(int i=0; i<listArticle.size();i++) {
 				
 				int fid=listArticle.get(i).getFid();
-				articleController.articlePhotoDelete(fid);
+				articleController.articlePhotoDelete(fid,request);
 			}
 			
 			//删除用户对应的帖子信息(数据库)

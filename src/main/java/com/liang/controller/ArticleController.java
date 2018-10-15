@@ -50,9 +50,21 @@ public class ArticleController {
 	 */
 	@RequestMapping("/setArticle")
 	//有MultipartFile file的时候不能有 Article article，因为Article中包含了文件（file）????!!!
-	public String setArticle(@RequestParam("photo") MultipartFile file, Article2 article2, HttpSession session)
+	public String setArticle(@RequestParam("photo") MultipartFile file, Article2 article2, HttpSession session,HttpServletRequest request)
 			throws IOException {
+		
+		String projectname;	//项目名称
+		projectname = request.getSession().getServletContext().getRealPath("/");
+		projectname=projectname.substring(0,projectname.length()-1);
+		if (projectname.indexOf("/")==-1) {//在非linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("\\"),projectname.length());
+		} else {//在linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("/"),projectname.length());
+		}
+		System.out.println("111111111111111111111111:"+projectname);
 
+		//文件（图片）路径
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
 		//用于存放新生成的文件名字(不重复)
 		String newFileName = "photo";
 		
@@ -71,7 +83,7 @@ public class ArticleController {
 				//生成新的文件名字(不重复)
 				newFileName = UUID.randomUUID() + fileName;
 				// 封装上传文件位置的全路径
-				File targetFile = new File(PathUtil.getArticlePath(), newFileName);
+				File targetFile = new File(filePath, newFileName);
 				System.out.println(targetFile);
 				// 把本地文件上传到封装上传文件位置
 				file.transferTo(targetFile);
@@ -132,7 +144,7 @@ public class ArticleController {
 	 * @throws IOException 
 	 */
 	@RequestMapping("/deleteArticle")
-	public ModelAndView deleteArticle(Article article) throws IOException {
+	public ModelAndView deleteArticle(Article article,HttpServletRequest request) throws IOException {
 		
 		int fid=article.getFid();
 		int count=commentService.getCommentFid(fid).size();
@@ -152,7 +164,7 @@ public class ArticleController {
 		}
 		
 		//调用删除帖子对应图片的方法
-		articlePhotoDelete(fid);
+		articlePhotoDelete(fid,request);
 		//删除帖子(数据库)
 		articleService.deleteArticle(fid);
 		
@@ -187,7 +199,19 @@ public class ArticleController {
 	 * @throws IOException 
 	 */
 	@RequestMapping("/updateArticle")
-	public ModelAndView updateArticle(@RequestParam("photo") MultipartFile file, Article2 article2) throws IOException {
+	public ModelAndView updateArticle(@RequestParam("photo") MultipartFile file, Article2 article2,HttpServletRequest request) throws IOException {
+		
+		String projectname;	//项目名称
+		projectname = request.getSession().getServletContext().getRealPath("/");
+		projectname=projectname.substring(0,projectname.length()-1);
+		if (projectname.indexOf("/")==-1) {//在非linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("\\"),projectname.length());
+		} else {//在linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("/"),projectname.length());
+		}
+
+		//文件（图片）路径
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
 		
 		int fid=article2.getFid();
 		
@@ -196,7 +220,7 @@ public class ArticleController {
 		// 生成新的文件名字(不重复)
 		String newFileName = UUID.randomUUID() + fileName;
 		// 封装上传文件位置的全路径
-		File targetFile = new File(PathUtil.getArticlePath(), newFileName);
+		File targetFile = new File(filePath, newFileName);
 		System.out.println(targetFile);
 		// 把本地文件上传到封装上传文件位置的全路径
 		file.transferTo(targetFile);
@@ -205,7 +229,7 @@ public class ArticleController {
 		Article article = new Article(article2, newFileName);
 		
 		//调用删除帖子对应图片的方法
-		articlePhotoDelete(fid);
+		articlePhotoDelete(fid,request);
 		//修改帖子表（数据库）
 		articleService.updateArticle(article);
 		
@@ -218,17 +242,24 @@ public class ArticleController {
 	 * 删除帖子对应的图片
 	 * @throws IOException 
 	 */
-	public void articlePhotoDelete(int fid) throws IOException {
+	public void articlePhotoDelete(int fid,HttpServletRequest request) throws IOException {
+		
+		String projectname;	//项目名称
+		projectname = request.getSession().getServletContext().getRealPath("/");
+		projectname=projectname.substring(0,projectname.length()-1);
+		if (projectname.indexOf("/")==-1) {//在非linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("\\"),projectname.length());
+		} else {//在linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("/"),projectname.length());
+		}
+
+		//文件（图片）路径
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
 		
 		// 获取取要删除帖子对应的图片的文件名（通过fid获取帖子信息）
-		System.out.println(fid);
-		System.out.println(articleService.getArticleKey(fid));
-		System.out.println(articleService.getArticleKey(fid).getPhoto());
 		String fileName = articleService.getArticleKey(fid).getPhoto();
-		System.out.println("文件名："+fileName);
 		// 封装上传文件位置的全路径
-		File targetFile = new File(PathUtil.getArticlePath(), fileName);
-		System.out.println("拼接全文件名："+targetFile);
+		File targetFile = new File(filePath, fileName);
 		
 		//删除帖子对应的图片（实际删除）
 		targetFile.delete();

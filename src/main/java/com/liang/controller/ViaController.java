@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,19 @@ public class ViaController {
 	 * @throws IOException 
 	 */
 	@RequestMapping("/setUserPhoto")
-	public String setUserPhoto(@RequestParam("photo") MultipartFile file, HttpSession session) throws IOException {
+	public String setUserPhoto(@RequestParam("photo") MultipartFile file, HttpSession session,HttpServletRequest request) throws IOException {
+		
+		String projectname;	//项目名称
+		projectname = request.getSession().getServletContext().getRealPath("/");
+		projectname=projectname.substring(0,projectname.length()-1);
+		if (projectname.indexOf("/")==-1) {//在非linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("\\"),projectname.length());
+		} else {//在linux系统下
+			projectname = projectname.substring(projectname.lastIndexOf("/"),projectname.length());
+		}
+
+		//文件（图片）路径
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
 		
 		//用于存放新生成的文件名字(不重复)
 		String newFileName = null;
@@ -53,7 +66,7 @@ public class ViaController {
 				//生成新的文件名字(不重复)
 				newFileName = UUID.randomUUID() + fileName;
 				// 封装上传文件位置的全路径
-				File targetFile = new File(PathUtil.getUserPath(), newFileName);
+				File targetFile = new File(filePath, newFileName);
 				System.out.println(targetFile);
 				// 把本地文件上传到封装上传文件位置
 				file.transferTo(targetFile);
@@ -71,7 +84,7 @@ public class ViaController {
 				// 获取取要删除用户对应的头像的文件名（通过userid获取头像信息）
 				String fileNameNew = viaService.getVia(userid).getPhoto();
 				// 封装上传文件位置的全路径
-				File targetFile = new File(PathUtil.getUserPath(), fileNameNew);
+				File targetFile = new File(filePath, fileNameNew);
 				System.out.println(targetFile);
 				//删除帖子对应的图片（实际删除）
 				targetFile.delete();
@@ -79,7 +92,7 @@ public class ViaController {
 				//生成新的文件名字(不重复)
 				newFileName = UUID.randomUUID() + fileName;
 				// 封装上传文件位置的全路径
-				targetFile = new File(PathUtil.getUserPath(), newFileName);
+				targetFile = new File(filePath, newFileName);
 				// 把本地文件上传到封装上传文件位置
 				file.transferTo(targetFile);
 				
