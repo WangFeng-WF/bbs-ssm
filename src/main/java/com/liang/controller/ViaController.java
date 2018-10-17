@@ -46,7 +46,7 @@ public class ViaController {
 		}
 
 		//文件（图片）路径
-		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getUserPath();
 		
 		//用于存放新生成的文件名字(不重复)
 		String newFileName = null;

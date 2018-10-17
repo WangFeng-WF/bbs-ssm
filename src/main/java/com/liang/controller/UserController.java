@@ -416,7 +416,7 @@ public class UserController {
 		}
 
 		//文件（图片）路径
-		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getArticlePath();
+		String filePath = PathUtil.getCommonPath()+projectname+PathUtil.getUserPath();
 		
 		int userid=user.getUserid();
 		
