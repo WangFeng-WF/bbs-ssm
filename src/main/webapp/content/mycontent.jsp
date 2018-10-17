@@ -39,7 +39,7 @@
 						</c:if>
 						</a>
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-12 col-xs-12">
 						<div class="row">
 							<div class="col-md-12">
 								<!-- 用户名 -->
@@ -66,16 +66,16 @@
 						</div>
 						<br>
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-10 col-xs-7">
 								<b>性别年龄</b> &nbsp;&nbsp;&nbsp; <span>${myListUser.sex }、${myListUser.age }</span>
+							</div>
+							<div class="col-md-2 col-xs-2">
+								<button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit">
+								编辑个人资料</button>
 							</div>
 						</div>
 						<br>
-					</div>
-					<div class="col-md-2">
-						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit"
-							style="position: relative; top: 150px; left: 10px">
-							编辑个人资料</button>
+						
 					</div>
 				</div>
 			</div>
